@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .product-detail-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .product-image {
+      width: 100%;
+      max-width: 300px;
+      margin: 0 auto;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+    }
+    .product-info {
+      text-align: center;
+    }
+    .product-info h1 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+    }
+    .weight-options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .weight-btn {
+      padding: 10px 20px;
+      border: 2px solid var(--primary-color);
+      background: white;
+      color: var(--primary-color);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .weight-btn.active, .weight-btn:hover {
+      background: var(--primary-color);
+      color: white;
+    }
+    .price-display {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--text-color);
+      margin: 20px 0;
+    }
+    .add-to-cart-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.2rem;
+      border-radius: var(--radius);
+      border: none;
+    }
+    @media (min-width: 768px) {
+      .product-detail-container {
+        flex-direction: row;
+        align-items: center;
+      }
+      .product-image {
+        flex: 1;
+      }
+      .product-info {
+        flex: 1;
+        text-align: left;
+      }
+      .weight-options {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="icon-btn" title="Back">⬅️</a>
+    <a href="index.html" class="logo-container">
+      <img src="logo.png" alt="Logo">
+      <h2>NutriBite</h2>
+    </a>
+    <div class="header-icons">
+      <a href="checkout.html" class="icon-btn" title="Cart">
+        🛒<span id="cart-count" class="cart-count">0</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <div class="product-detail-container" id="product-container">
+      <!-- Content injected via JS -->
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      const product = getProductById(productId);
+      const allPrices = getPrices();
+      
+      if (!product || !allPrices[productId]) {
+        document.getElementById('product-container').innerHTML = '<h2>Product not found.</h2>';
+        return;
+      }
+
+      const prices = allPrices[productId];
+      const weights = ['50g', '100g', '250g', '500g', '1kg'];
+      let selectedWeight = '250g'; // default
+
+      const container = document.getElementById('product-container');
+      
+      function render() {
+        container.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="product-image">
+          <div class="product-info">
+            <h1>${product.name}</h1>
+            <p>Select Quantity:</p>
+            <div class="weight-options">
+              ${weights.map(w => `
+                <button class="weight-btn ${w === selectedWeight ? 'active' : ''}" onclick="selectWeight('${w}')">
+                  ${w}
+                </button>
+              `).join('')}
+            </div>
+            <div class="price-display">₹${prices[selectedWeight]}</div>
+            <button class="shop-btn add-to-cart-btn" onclick="addCurrentToCart()">Add to Cart 🛒</button>
+          </div>
+        `;
+      }
+
+      window.selectWeight = function(weight) {
+        selectedWeight = weight;
+        render();
+      };
+
+      window.addCurrentToCart = function() {
+        const item = {
+          id: product.id,
+          name: product.name,
+          image: product.image,
+          weight: selectedWeight,
+          price: prices[selectedWeight]
+        };
+        addToCart(item);
+      };
+
+      render();
+    });
+  </script>
+</body>
+</html>

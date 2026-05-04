@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | NutriBite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .admin-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    #login-section {
+      text-align: center;
+      padding: 50px 20px;
+    }
+    #login-section input {
+      padding: 10px;
+      font-size: 1.2rem;
+      border: 2px solid var(--primary-color);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      width: 150px;
+      text-align: center;
+      letter-spacing: 5px;
+    }
+    #dashboard-section {
+      display: none;
+    }
+    .product-price-editor {
+      margin-bottom: 30px;
+      border: 1px solid #eee;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .product-price-editor h3 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 5px;
+    }
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+    }
+    .price-input-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .price-input-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .save-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background: var(--primary-color);
+      color: white;
+      text-align: center;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s;
+    }
+    .save-btn:hover {
+      background: #a0522d;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="icon-btn" title="Back">⬅️</a>
+    <a href="index.html" class="logo-container">
+      <img src="logo.png" alt="Logo">
+      <h2>Admin Portal</h2>
+    </a>
+  </header>
+
+  <main>
+    <div class="admin-container">
+      
+      <!-- Login Section -->
+      <div id="login-section">
+        <h2>Enter Admin Passkey</h2>
+        <p>Restricted Access</p>
+        <br>
+        <input type="password" id="passkey" maxlength="3" placeholder="***">
+        <br>
+        <button class="shop-btn" onclick="verifyLogin()">Access Dashboard</button>
+        <p id="error-msg" style="color:red; margin-top:15px; display:none;">Incorrect Passkey!</p>
+      </div>
+
+      <!-- Dashboard Section -->
+      <div id="dashboard-section">
+        <h2>Price Configuration</h2>
+        <p style="margin-bottom: 20px;">Update prices below. Changes are saved locally.</p>
+        <div id="price-editors-container"></div>
+        <button class="save-btn" onclick="savePrices()">Save All Prices</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    function verifyLogin() {
+      const key = document.getElementById('passkey').value;
+      if (key === '111') {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('dashboard-section').style.display = 'block';
+        renderPriceEditors();
+      } else {
+        document.getElementById('error-msg').style.display = 'block';
+      }
+    }
+
+    function renderPriceEditors() {
+      const prices = getPrices();
+      const container = document.getElementById('price-editors-container');
+      const weights = ['50g', '100g', '250g', '500g', '1kg'];
+      let html = '';
+
+      // Merge all products into a single flat array for iteration
+      const allProducts = [...products.nuts, ...products.seeds, ...products.combos];
+
+      allProducts.forEach(product => {
+        if (!prices[product.id]) return;
+        
+        html += `
+          <div class="product-price-editor">
+            <h3>${product.name}</h3>
+            <div class="price-grid">
+              ${weights.map(w => `
+                <div class="price-input-group">
+                  <label>${w} (₹)</label>
+                  <input type="number" id="price_${product.id}_${w}" value="${prices[product.id][w]}">
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function savePrices() {
+      const currentPrices = getPrices();
+      const weights = ['50g', '100g', '250g', '500g', '1kg'];
+      const allProducts = [...products.nuts, ...products.seeds, ...products.combos];
+
+      allProducts.forEach(product => {
+        if (!currentPrices[product.id]) return;
+        weights.forEach(w => {
+          const inputEl = document.getElementById(`price_${product.id}_${w}`);
+          if (inputEl) {
+            currentPrices[product.id][w] = parseInt(inputEl.value) || currentPrices[product.id][w];
+          }
+        });
+      });
+
+      localStorage.setItem('prices', JSON.stringify(currentPrices));
+      alert("Prices updated successfully!");
+    }
+  </script>
+</body>
+</html>

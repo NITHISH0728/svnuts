@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Nuts & Seeds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <a href="admin.html" class="icon-btn" title="Admin Access">🛡️</a>
+    <a href="index.html" class="logo-container">
+      <img src="logo.png" alt="Logo">
+      <h2>NutriBite</h2>
+    </a>
+    <div class="header-icons">
+      <a href="checkout.html" class="icon-btn" title="Cart">
+        🛒<span id="cart-count" class="cart-count">0</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Scrollable Hero Sections -->
+    <div class="hero-container">
+      <section class="hero-section hero-nuts" style="background-image: url('c1.png');">
+        <div class="hero-content">
+          <h1>Premium Quality Nuts</h1>
+          <p>"Fuel your day with nature's finest crunch."</p>
+          <a href="#nuts" class="shop-btn">Shop Nuts</a>
+        </div>
+      </section>
+
+      <section class="hero-section hero-seeds" style="background-image: url('pum.png');">
+        <div class="hero-content">
+          <h1>Nutritious Seeds</h1>
+          <p>"Top quality, hand-packed for your wellness."</p>
+          <a href="#seeds" class="shop-btn">Shop Seeds</a>
+        </div>
+      </section>
+
+      <section class="hero-section hero-combos" style="background-image: url('nut.png');">
+        <div class="hero-content">
+          <h1>Signature Combos</h1>
+          <p>"The perfect blend of taste and health."</p>
+          <a href="#combos" class="shop-btn">Shop Combos</a>
+        </div>
+      </section>
+    </div>
+
+    <!-- Sliding Circular Menu -->
+    <section class="slider-container">
+      <h2>Explore Our Range</h2>
+      <div class="circular-slider">
+        <a href="product.html?id=cashew" class="circle-item">
+          <div class="circle-img-wrap"><img src="c1.png" alt="Cashew"></div>
+          <span>Cashew</span>
+        </a>
+        <a href="product.html?id=almond" class="circle-item">
+          <div class="circle-img-wrap"><img src="b1.png" alt="Almond"></div>
+          <span>Almond</span>
+        </a>
+        <a href="product.html?id=pista" class="circle-item">
+          <div class="circle-img-wrap"><img src="p1.png" alt="Pista"></div>
+          <span>Pista</span>
+        </a>
+        <a href="product.html?id=walnut" class="circle-item">
+          <div class="circle-img-wrap"><img src="w1.png" alt="Walnut"></div>
+          <span>Walnut</span>
+        </a>
+        <a href="product.html?id=chia" class="circle-item">
+          <div class="circle-img-wrap"><img src="chia.png" alt="Chia"></div>
+          <span>Chia</span>
+        </a>
+        <a href="product.html?id=flax" class="circle-item">
+          <div class="circle-img-wrap"><img src="flex.png" alt="Flax"></div>
+          <span>Flax</span>
+        </a>
+        <a href="product.html?id=sunflower" class="circle-item">
+          <div class="circle-img-wrap"><img src="sun.png" alt="Sunflower"></div>
+          <span>Sunflower</span>
+        </a>
+        <a href="product.html?id=pumpkin" class="circle-item">
+          <div class="circle-img-wrap"><img src="pum.png" alt="Pumpkin"></div>
+          <span>Pumpkin</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section id="nuts" class="category-section">
+      <h2>Nuts Collection</h2>
+      <div class="product-grid" id="nuts-grid"></div>
+    </section>
+
+    <section id="seeds" class="category-section">
+      <h2>Seeds Collection</h2>
+      <div class="product-grid" id="seeds-grid"></div>
+    </section>
+
+    <section id="combos" class="category-section">
+      <h2>Combos Selection</h2>
+      <div class="product-grid" id="combos-grid"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+  <script>
+    // Render Products Grid
+    function renderProducts() {
+      const generateHTML = (items) => {
+        return items.map(item => `
+          <a href="product.html?id=${item.id}" class="product-card">
+            <img src="${item.image}" alt="${item.name}">
+            <h3>${item.name}</h3>
+            <span class="shop-btn" style="padding: 8px 15px; font-size: 0.9rem; margin-top: 10px;">Select</span>
+          </a>
+        `).join('');
+      };
+
+      document.getElementById('nuts-grid').innerHTML = generateHTML(products.nuts);
+      document.getElementById('seeds-grid').innerHTML = generateHTML(products.seeds);
+      document.getElementById('combos-grid').innerHTML = generateHTML(products.combos);
+    }
+    
+    document.addEventListener('DOMContentLoaded', renderProducts);
+  </script>
+</body>
+</html>
