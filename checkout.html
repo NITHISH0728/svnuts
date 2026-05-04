@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout | NutriBite</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
     .checkout-container {
@@ -18,8 +18,7 @@
     .cart-summary, .customer-details {
       background: white;
       padding: 25px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border: 1px solid #eee;
     }
     .cart-item {
       display: flex;
@@ -29,22 +28,21 @@
       border-bottom: 1px solid #eee;
     }
     .cart-item img {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      border-radius: 8px;
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border: 1px solid #eee;
     }
     .item-details {
       flex: 1;
       padding: 0 15px;
     }
-    .item-details h4 { margin-bottom: 5px; }
+    .item-details h4 { margin-bottom: 5px; font-weight: 500; }
     .item-remove {
-      color: red;
+      color: #000;
       cursor: pointer;
       background: none;
       border: none;
-      font-size: 1.2rem;
     }
     .cart-total {
       font-size: 1.5rem;
@@ -58,34 +56,28 @@
     .form-group label {
       display: block;
       margin-bottom: 5px;
-      font-weight: 600;
+      font-weight: 500;
     }
     .form-group input, .form-group textarea {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+      border: 1px solid #ccc;
       font-family: var(--font-main);
     }
     .whatsapp-btn {
-      background: #25D366; /* WhatsApp Green */
+      background: #000;
       width: 100%;
       padding: 15px;
-      font-size: 1.2rem;
-      border-radius: var(--radius);
+      font-size: 1.1rem;
       border: none;
       color: white;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
       margin-top: 20px;
       transition: background 0.3s;
     }
     .whatsapp-btn:hover {
-      background: #1da851;
+      background: #333;
     }
     @media (min-width: 768px) {
       .checkout-container {
@@ -97,10 +89,12 @@
 <body>
 
   <header>
-    <a href="index.html" class="icon-btn" title="Back">⬅️</a>
+    <a href="index.html" class="icon-btn" title="Back">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
     <a href="index.html" class="logo-container">
       <img src="logo.png" alt="Logo">
-      <h2>NutriBite Checkout</h2>
+      <h2 style="font-weight: 700; letter-spacing: 1px;">NutriBite Checkout</h2>
     </a>
   </header>
 
@@ -111,7 +105,7 @@
         <div id="cart-items-container">
           <!-- Cart Items Injected Here -->
         </div>
-        <div class="cart-total" id="cart-total">Total: ₹0</div>
+        <div class="cart-total" id="cart-total">Total: Rs. 0</div>
       </div>
 
       <div class="customer-details">
@@ -159,7 +153,7 @@
 
       if (cart.length === 0) {
         container.innerHTML = '<p>Your cart is empty.</p>';
-        totalEl.innerText = 'Total: ₹0';
+        totalEl.innerText = 'Total: Rs. 0';
         return;
       }
 
@@ -167,21 +161,24 @@
       let total = 0;
 
       cart.forEach((item, index) => {
-        total += item.price;
+        const lineTotal = item.price * item.qty;
+        total += lineTotal;
         html += `
           <div class="cart-item">
             <img src="${item.image}" alt="${item.name}">
             <div class="item-details">
               <h4>${item.name}</h4>
-              <p>${item.weight} - ₹${item.price}</p>
+              <p>${item.weight} (Qty: ${item.qty}) - Rs. ${lineTotal}</p>
             </div>
-            <button class="item-remove" onclick="removeFromCart(${index})">🗑️</button>
+            <button class="item-remove" onclick="removeFromCart(${index})">
+              <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
           </div>
         `;
       });
 
       container.innerHTML = html;
-      totalEl.innerText = `Total: ₹${total}`;
+      totalEl.innerText = `Total: Rs. ${total}`;
     }
 
     function removeFromCart(index) {
@@ -214,11 +211,12 @@
       orderText += `*Order Items:*%0A`;
       let total = 0;
       cart.forEach((item, i) => {
-        orderText += `${i+1}. ${item.name} (${item.weight}) - ₹${item.price}%0A`;
-        total += item.price;
+        const lineTotal = item.price * item.qty;
+        orderText += `${i+1}. ${item.name} (${item.weight}) x ${item.qty} - Rs. ${lineTotal}%0A`;
+        total += lineTotal;
       });
 
-      orderText += `%0A*Total Value: ₹${total}*`;
+      orderText += `%0A*Total Value: Rs. ${total}*`;
 
       const whatsappNumber = "918790328321";
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${orderText}`;

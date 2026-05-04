@@ -4,49 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Premium Nuts & Seeds</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <!-- Top Navigation -->
   <header>
-    <a href="admin.html" class="icon-btn" title="Admin Access">🛡️</a>
+    <a href="admin.html" class="icon-btn" title="Admin Access">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+    </a>
     <a href="index.html" class="logo-container">
       <img src="logo.png" alt="Logo">
-      <h2>NutriBite</h2>
+      <h2 style="font-weight: 700; letter-spacing: 1px;">NutriBite</h2>
     </a>
     <div class="header-icons">
       <a href="checkout.html" class="icon-btn" title="Cart">
-        🛒<span id="cart-count" class="cart-count">0</span>
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        <span id="cart-count" class="cart-count">0</span>
       </a>
     </div>
   </header>
 
   <main>
-    <!-- Scrollable Hero Sections -->
+    <!-- Scrollable Hero Sections (Horizontal) -->
     <div class="hero-container">
       <section class="hero-section hero-nuts" style="background-image: url('c1.png');">
         <div class="hero-content">
           <h1>Premium Quality Nuts</h1>
-          <p>"Fuel your day with nature's finest crunch."</p>
-          <a href="#nuts" class="shop-btn">Shop Nuts</a>
+          <a href="#nuts" class="shop-btn primary">Shop Nuts</a>
         </div>
       </section>
 
       <section class="hero-section hero-seeds" style="background-image: url('pum.png');">
         <div class="hero-content">
           <h1>Nutritious Seeds</h1>
-          <p>"Top quality, hand-packed for your wellness."</p>
-          <a href="#seeds" class="shop-btn">Shop Seeds</a>
+          <a href="#seeds" class="shop-btn primary">Shop Seeds</a>
         </div>
       </section>
 
       <section class="hero-section hero-combos" style="background-image: url('nut.png');">
         <div class="hero-content">
           <h1>Signature Combos</h1>
-          <p>"The perfect blend of taste and health."</p>
-          <a href="#combos" class="shop-btn">Shop Combos</a>
+          <a href="#combos" class="shop-btn primary">Shop Combos</a>
         </div>
       </section>
     </div>
@@ -111,14 +111,23 @@
   <script>
     // Render Products Grid
     function renderProducts() {
+      const allPrices = getPrices();
+      
       const generateHTML = (items) => {
-        return items.map(item => `
-          <a href="product.html?id=${item.id}" class="product-card">
-            <img src="${item.image}" alt="${item.name}">
-            <h3>${item.name}</h3>
-            <span class="shop-btn" style="padding: 8px 15px; font-size: 0.9rem; margin-top: 10px;">Select</span>
-          </a>
-        `).join('');
+        return items.map(item => {
+          // Display the 250g price on the main grid as default
+          const defaultPrice = allPrices[item.id] ? allPrices[item.id]['250g'] : 0;
+          return `
+            <a href="product.html?id=${item.id}" class="product-card">
+              <img src="${item.image}" alt="${item.name}">
+              <div class="product-card-body">
+                <h3>${item.name}</h3>
+                <div class="price">Rs. ${defaultPrice}.00</div>
+                <div class="shop-btn" style="display:block; padding: 10px; font-size: 0.9rem;">Add to cart</div>
+              </div>
+            </a>
+          `;
+        }).join('');
       };
 
       document.getElementById('nuts-grid').innerHTML = generateHTML(products.nuts);

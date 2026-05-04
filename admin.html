@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Portal | NutriBite</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
     .admin-container {
@@ -12,8 +12,7 @@
       margin: 40px auto;
       padding: 20px;
       background: white;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      border: 1px solid #eee;
     }
     #login-section {
       text-align: center;
@@ -22,8 +21,7 @@
     #login-section input {
       padding: 10px;
       font-size: 1.2rem;
-      border: 2px solid var(--primary-color);
-      border-radius: 8px;
+      border: 2px solid #000;
       margin-bottom: 20px;
       width: 150px;
       text-align: center;
@@ -36,12 +34,10 @@
       margin-bottom: 30px;
       border: 1px solid #eee;
       padding: 15px;
-      border-radius: 8px;
     }
     .product-price-editor h3 {
-      color: var(--primary-color);
       margin-bottom: 15px;
-      border-bottom: 2px solid #eee;
+      border-bottom: 1px solid #eee;
       padding-bottom: 5px;
     }
     .price-grid {
@@ -52,42 +48,42 @@
     .price-input-group label {
       display: block;
       font-size: 0.9rem;
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 5px;
     }
     .price-input-group input {
       width: 100%;
       padding: 8px;
       border: 1px solid #ccc;
-      border-radius: 4px;
     }
     .save-btn {
       display: block;
       width: 100%;
       padding: 15px;
-      background: var(--primary-color);
+      background: #000;
       color: white;
       text-align: center;
       border: none;
-      border-radius: var(--radius);
-      font-size: 1.2rem;
-      font-weight: bold;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
       margin-top: 20px;
       transition: background 0.3s;
     }
     .save-btn:hover {
-      background: #a0522d;
+      background: #333;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <a href="index.html" class="icon-btn" title="Back">⬅️</a>
+    <a href="index.html" class="icon-btn" title="Back">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
     <a href="index.html" class="logo-container">
       <img src="logo.png" alt="Logo">
-      <h2>Admin Portal</h2>
+      <h2 style="font-weight: 700; letter-spacing: 1px;">Admin Portal</h2>
     </a>
   </header>
 
@@ -101,7 +97,7 @@
         <br>
         <input type="password" id="passkey" maxlength="3" placeholder="***">
         <br>
-        <button class="shop-btn" onclick="verifyLogin()">Access Dashboard</button>
+        <button class="shop-btn primary" onclick="verifyLogin()">Access Dashboard</button>
         <p id="error-msg" style="color:red; margin-top:15px; display:none;">Incorrect Passkey!</p>
       </div>
 
@@ -135,7 +131,6 @@
       const weights = ['50g', '100g', '250g', '500g', '1kg'];
       let html = '';
 
-      // Merge all products into a single flat array for iteration
       const allProducts = [...products.nuts, ...products.seeds, ...products.combos];
 
       allProducts.forEach(product => {
@@ -147,7 +142,7 @@
             <div class="price-grid">
               ${weights.map(w => `
                 <div class="price-input-group">
-                  <label>${w} (₹)</label>
+                  <label>${w} (Rs)</label>
                   <input type="number" id="price_${product.id}_${w}" value="${prices[product.id][w]}">
                 </div>
               `).join('')}

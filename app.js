@@ -1,7 +1,7 @@
 // Product Data
 const products = {
   nuts: [
-    { id: 'cashew', name: 'Premium Cashew', image: 'c1.png' },
+    { id: 'cashew', name: 'Cashew Full W320', image: 'c1.png' },
     { id: 'almond', name: 'California Almonds', image: 'b1.png' },
     { id: 'pista', name: 'Roasted Pista', image: 'p1.png' },
     { id: 'walnut', name: 'Kashmiri Walnut', image: 'w1.png' }
@@ -20,7 +20,7 @@ const products = {
 };
 
 const defaultPrices = {
-  cashew: { '50g': 50, '100g': 95, '250g': 230, '500g': 450, '1kg': 880 },
+  cashew: { '50g': 50, '100g': 100, '250g': 250, '500g': 500, '1kg': 1000 },
   almond: { '50g': 45, '100g': 85, '250g': 200, '500g': 390, '1kg': 750 },
   pista: { '50g': 60, '100g': 115, '250g': 280, '500g': 550, '1kg': 1050 },
   walnut: { '50g': 55, '100g': 105, '250g': 250, '500g': 490, '1kg': 950 },
@@ -42,6 +42,7 @@ function initApp() {
     localStorage.setItem('cart', JSON.stringify([]));
   }
   updateCartCount();
+  setupAutoScroll();
 }
 
 // Cart operations
@@ -53,30 +54,111 @@ function updateCartCount() {
   const cart = getCart();
   const countEl = document.getElementById('cart-count');
   if (countEl) {
-    countEl.innerText = cart.length;
+    let totalItems = 0;
+    cart.forEach(item => totalItems += item.qty);
+    countEl.innerText = totalItems;
   }
 }
 
-function addToCart(item) {
+function addToCart(item, qty = 1, skipNotification = false) {
   const cart = getCart();
-  // item should be { id, name, weight, price, image }
-  cart.push(item);
+  // Check if item with same id and weight already exists
+  const existing = cart.find(i => i.id === item.id && i.weight === item.weight);
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    cart.push({ ...item, qty: qty });
+  }
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
-  alert(`${item.name} (${item.weight}) added to cart!`);
+
+  if (!skipNotification) {
+    showNotification(item, qty);
+  }
+}
+
+function showNotification(item, qty) {
+  let panel = document.getElementById('notification-panel');
+  if (!panel) {
+    // Create the panel if it doesn't exist
+    panel = document.createElement('div');
+    panel.id = 'notification-panel';
+    panel.className = 'notification-panel';
+    document.body.appendChild(panel);
+  }
+
+  const cart = getCart();
+  let totalItems = 0;
+  cart.forEach(i => totalItems += i.qty);
+
+  panel.innerHTML = `
+    <div class="notif-header">
+      <span>
+        <svg class="icon-svg" style="fill:#1da851;" viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+        Item added to your cart
+      </span>
+      <button class="close-notif" onclick="closeNotification()">✕</button>
+    </div>
+    <div class="notif-item">
+      <img src="${item.image}" alt="${item.name}">
+      <div>
+        <p>${item.name} - ${item.weight}</p>
+        <p>Rs. ${item.price}</p>
+      </div>
+    </div>
+    <div class="notif-actions">
+      <a href="checkout.html" class="btn-outline">View cart (${totalItems})</a>
+      <a href="checkout.html" class="btn-solid">Check out</a>
+      <a href="javascript:void(0)" class="continue-link" onclick="closeNotification()">Continue shopping</a>
+    </div>
+  `;
+
+  // Show panel
+  setTimeout(() => {
+    panel.classList.add('show');
+  }, 10);
+}
+
+function closeNotification() {
+  const panel = document.getElementById('notification-panel');
+  if (panel) {
+    panel.classList.remove('show');
+  }
 }
 
 function getPrices() {
   return JSON.parse(localStorage.getItem('prices'));
 }
 
-// Get product details by ID
 function getProductById(id) {
   for (const cat in products) {
     const found = products[cat].find(p => p.id === id);
     if (found) return found;
   }
   return null;
+}
+
+// Auto-scroll logic for slider
+function setupAutoScroll() {
+  const slider = document.querySelector('.circular-slider');
+  if (!slider) return;
+  
+  let scrollAmount = 0;
+  const step = 1;
+  const speed = 30; // ms
+  
+  function scroll() {
+    if (slider.scrollLeft >= (slider.scrollWidth - slider.clientWidth)) {
+      slider.scrollLeft = 0;
+    } else {
+      slider.scrollLeft += step;
+    }
+  }
+  
+  let interval = setInterval(scroll, speed);
+  
+  slider.addEventListener('mouseenter', () => clearInterval(interval));
+  slider.addEventListener('mouseleave', () => interval = setInterval(scroll, speed));
 }
 
 // Run init on load
