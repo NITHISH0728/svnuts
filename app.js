@@ -1,5 +1,5 @@
 // Product Data
-const products = {
+const defaultProducts = {
   nuts: [
     { id: 'cashew', name: 'Cashew Full W320', image: 'c1.png' },
     { id: 'almond', name: 'California Almonds', image: 'b1.png' },
@@ -18,6 +18,8 @@ const products = {
     { id: 'seedcombo', name: 'Seeds Combos', image: 'seed.png' }
   ]
 };
+
+let products = JSON.parse(localStorage.getItem('products')) || defaultProducts;
 
 const defaultPrices = {
   cashew: { '50g': 50, '100g': 100, '250g': 250, '500g': 500, '1kg': 1000 },
@@ -41,9 +43,19 @@ function initApp() {
   if (!localStorage.getItem('cart')) {
     localStorage.setItem('cart', JSON.stringify([]));
   }
+  if (!localStorage.getItem('products')) {
+    localStorage.setItem('products', JSON.stringify(defaultProducts));
+  }
   updateCartCount();
   setupAutoScroll();
 }
+
+// Global context menu protection for images
+document.addEventListener('contextmenu', function(e) {
+  if (e.target.tagName === 'IMG' && e.target.classList.contains('no-download')) {
+    e.preventDefault();
+  }
+});
 
 // Cart operations
 function getCart() {
@@ -100,7 +112,7 @@ function showNotification(item, qty) {
       <button class="close-notif" onclick="closeNotification()">✕</button>
     </div>
     <div class="notif-item">
-      <img src="${item.image}" alt="${item.name}">
+      <img src="${item.image}" alt="${item.name}" class="no-download">
       <div>
         <p>${item.name} - ${item.weight}</p>
         <p>Rs. ${item.price}</p>

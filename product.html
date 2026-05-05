@@ -128,8 +128,22 @@
       const container = document.getElementById('product-container');
       
       function render() {
+        let realPhotosHtml = '';
+        if (product.realPhotos && product.realPhotos.length > 0) {
+          realPhotosHtml = `
+            <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+              <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Real Product Photos</h2>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                ${product.realPhotos.map(url => `
+                  <img src="${url}" alt="${product.name} Real Photo" class="no-download" style="width: 100%; aspect-ratio: 1; object-fit: cover; border: 1px solid #eee; border-radius: 4px;">
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+
         container.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" class="product-image">
+          <img src="${product.image}" alt="${product.name}" class="product-image no-download">
           <div class="product-info">
             <h1>${product.name} - ${selectedWeight}</h1>
             <div class="price-display">Rs. ${prices[selectedWeight]}.00</div>
@@ -154,6 +168,7 @@
 
             <button class="btn-block btn-add" onclick="addCurrentToCart()">Add to cart</button>
             <button class="btn-block btn-buy" onclick="buyItNow()">Buy it now</button>
+            ${realPhotosHtml}
           </div>
         `;
       }

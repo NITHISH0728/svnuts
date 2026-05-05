@@ -73,6 +73,30 @@
     .save-btn:hover {
       background: #333;
     }
+    .product-creation-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+    }
+    .product-creation-section h2 {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
@@ -103,6 +127,32 @@
 
       <!-- Dashboard Section -->
       <div id="dashboard-section">
+        <div class="product-creation-section">
+          <h2>Create / Update Product</h2>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="p-category">
+              <option value="nuts">Nuts</option>
+              <option value="seeds">Seeds</option>
+              <option value="combos">Combos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Product ID (e.g., 'almond')</label>
+            <input type="text" id="p-id" placeholder="Unique ID">
+          </div>
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="p-name" placeholder="Product Name">
+          </div>
+          <div class="form-group">
+            <label>Product Image</label>
+            <input type="file" id="image-input" accept="image/*">
+          </div>
+          <button class="save-btn" id="upload-btn" onclick="uploadImageAndCreateProduct()">Upload Image & Save Product</button>
+          <p id="upload-status" style="margin-top: 10px; font-weight: 500; color: #555;"></p>
+        </div>
+
         <h2>Price Configuration</h2>
         <p style="margin-bottom: 20px;">Update prices below. Changes are saved locally.</p>
         <div id="price-editors-container"></div>
@@ -114,6 +164,74 @@
 
   <script src="app.js"></script>
   <script>
+    async function uploadImageAndCreateProduct() {
+      const category = document.getElementById('p-category').value;
+      const id = document.getElementById('p-id').value.trim();
+      const name = document.getElementById('p-name').value.trim();
+      const fileInput = document.getElementById('image-input');
+
+      if (!id || !name || fileInput.files.length === 0) {
+        alert("Please fill all fields and select an image.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'nut_store_preset');
+
+      const statusEl = document.getElementById('upload-status');
+      statusEl.innerText = "Uploading image... Please wait.";
+      statusEl.style.color = "#000";
+
+      try {
+        const response = await fetch('https://api.cloudinary.com/v1_1/demafuofd/image/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+        
+        if (data.secure_url) {
+          statusEl.innerText = "Upload successful! Saving product...";
+          statusEl.style.color = "green";
+          
+          saveProductToLocalStorage(category, id, name, data.secure_url);
+          
+          setTimeout(() => {
+            statusEl.innerText = "";
+            fileInput.value = "";
+            renderPriceEditors();
+          }, 1500);
+
+        } else {
+          throw new Error(data.error?.message || 'Upload failed');
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = "Upload failed: " + err.message;
+        statusEl.style.color = "red";
+      }
+    }
+
+    function saveProductToLocalStorage(category, id, name, imageUrl) {
+      let categoryArray = products[category];
+      
+      const existingProduct = categoryArray.find(p => p.id === id);
+      if (existingProduct) {
+        existingProduct.name = name;
+        existingProduct.image = imageUrl;
+      } else {
+        categoryArray.push({ id, name, image: imageUrl });
+        
+        const prices = getPrices();
+        prices[id] = { '50g': 0, '100g': 0, '250g': 0, '500g': 0, '1kg': 0 };
+        localStorage.setItem('prices', JSON.stringify(prices));
+      }
+
+      localStorage.setItem('products', JSON.stringify(products));
+    }
+
     function verifyLogin() {
       const key = document.getElementById('passkey').value;
       if (key === '111') {
@@ -131,11 +249,42 @@
       const weights = ['50g', '100g', '250g', '500g', '1kg'];
       let html = '';
 
-      const allProducts = [...products.nuts, ...products.seeds, ...products.combos];
+      const allProducts = [
+        ...products.nuts.map(p => ({...p, category: 'nuts'})), 
+        ...products.seeds.map(p => ({...p, category: 'seeds'})), 
+        ...products.combos.map(p => ({...p, category: 'combos'}))
+      ];
 
       allProducts.forEach(product => {
         if (!prices[product.id]) return;
         
+        let realPhotosHtml = '';
+        if (product.realPhotos && product.realPhotos.length > 0) {
+          realPhotosHtml += `<div style="display:flex; gap:10px; margin-bottom:10px; margin-top:15px;">`;
+          product.realPhotos.forEach((url, idx) => {
+            realPhotosHtml += `
+              <div style="position:relative; width:80px; height:80px;">
+                <img src="${url}" style="width:100%; height:100%; object-fit:cover; border:1px solid #ccc;">
+                <button onclick="deleteRealPhoto('${product.category}', '${product.id}', ${idx})" style="position:absolute; top:0; right:0; background:red; color:white; border:none; cursor:pointer; padding:2px 5px; font-size:10px;">X</button>
+              </div>
+            `;
+          });
+          realPhotosHtml += `</div>`;
+        }
+        
+        let uploadHtml = '';
+        if (!product.realPhotos || product.realPhotos.length < 2) {
+          uploadHtml = `
+            <div style="margin-top:10px;">
+              <input type="file" id="real-photo-${product.id}" accept="image/*" style="font-size: 0.85rem; max-width:180px;">
+              <button onclick="uploadRealPhoto('${product.category}', '${product.id}')" style="padding:6px 10px; background:#000; color:#fff; border:none; cursor:pointer; font-size:0.85rem;">Upload Real Photo</button>
+              <span id="real-status-${product.id}" style="font-size:0.85rem; margin-left:10px; font-weight:500;"></span>
+            </div>
+          `;
+        } else {
+          uploadHtml = `<p style="font-size:0.85rem; color:#666; margin-top:10px;">Maximum 2 real photos reached.</p>`;
+        }
+
         html += `
           <div class="product-price-editor">
             <h3>${product.name}</h3>
@@ -146,6 +295,11 @@
                   <input type="number" id="price_${product.id}_${w}" value="${prices[product.id][w]}">
                 </div>
               `).join('')}
+            </div>
+            <div style="margin-top:20px; border-top:1px solid #eee; padding-top:10px;">
+              <h4 style="font-size:1rem; margin-bottom:10px;">Real Photos (Max 2)</h4>
+              ${realPhotosHtml}
+              ${uploadHtml}
             </div>
           </div>
         `;
@@ -171,6 +325,67 @@
 
       localStorage.setItem('prices', JSON.stringify(currentPrices));
       alert("Prices updated successfully!");
+    }
+
+    async function uploadRealPhoto(category, id) {
+      const fileInput = document.getElementById(`real-photo-${id}`);
+      if (!fileInput || fileInput.files.length === 0) {
+        alert("Please select an image first.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'nut_store_preset');
+
+      const statusEl = document.getElementById(`real-status-${id}`);
+      statusEl.innerText = "Uploading...";
+      statusEl.style.color = "#000";
+
+      try {
+        const response = await fetch('https://api.cloudinary.com/v1_1/demafuofd/image/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+        
+        if (data.secure_url) {
+          statusEl.innerText = "Uploaded!";
+          statusEl.style.color = "green";
+          
+          let categoryArray = products[category];
+          const existingProduct = categoryArray.find(p => p.id === id);
+          if (existingProduct) {
+            if (!existingProduct.realPhotos) existingProduct.realPhotos = [];
+            existingProduct.realPhotos.push(data.secure_url);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            setTimeout(() => {
+              renderPriceEditors();
+            }, 1000);
+          }
+        } else {
+          throw new Error(data.error?.message || 'Upload failed');
+        }
+      } catch (err) {
+        console.error(err);
+        statusEl.innerText = "Failed";
+        statusEl.style.color = "red";
+      }
+    }
+
+    function deleteRealPhoto(category, id, index) {
+      if (confirm("Are you sure you want to delete this photo?")) {
+        let categoryArray = products[category];
+        const existingProduct = categoryArray.find(p => p.id === id);
+        if (existingProduct && existingProduct.realPhotos) {
+          existingProduct.realPhotos.splice(index, 1);
+          localStorage.setItem('products', JSON.stringify(products));
+          renderPriceEditors();
+        }
+      }
     }
   </script>
 </body>

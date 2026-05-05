@@ -377,3 +377,9 @@ main {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* Image Protection */
+.no-download {
+  pointer-events: none;
+  user-select: none;
+}
