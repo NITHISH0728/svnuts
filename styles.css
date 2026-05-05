@@ -253,11 +253,12 @@ main {
 /* Category Banners */
 .category-banner {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   background: #fdfdfd;
   border: 1px solid #eee;
   margin-bottom: 15px;
   overflow: hidden;
+  height: 200px;
 }
 
 .category-banner-content {
@@ -265,7 +266,7 @@ main {
   flex-direction: column;
   justify-content: center;
   flex: 1;
-  padding: 30px;
+  padding: 15px;
 }
 
 .category-banner-img {
@@ -276,14 +277,14 @@ main {
 }
 
 .category-banner h2 {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-size: 1.3rem;
+  margin-bottom: 8px;
 }
 
 .category-banner p {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #555;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .banner-arrow-btn {
@@ -466,8 +467,21 @@ main {
   }
   
   .category-banner {
-    flex-direction: row;
     height: 300px;
+  }
+
+  .category-banner-content {
+    padding: 30px;
+  }
+
+  .category-banner h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .category-banner p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
   }
 }
 
