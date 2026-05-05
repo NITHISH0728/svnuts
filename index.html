@@ -97,22 +97,21 @@
       </div>
     </section>
 
-    <!-- Categories -->
     <section id="nuts" class="category-section">
       <div class="category-banner">
-        <div class="category-banner-content">
+        <div class="category-banner-content scroll-animate fade-up">
           <h2>Our Premium Quality Nuts</h2>
           <p>Feel the nature</p>
           <a href="category.html?type=nuts" class="banner-arrow-btn" style="text-decoration:none;">→</a>
         </div>
-        <div class="category-banner-img" style="background-image: url('i1.png');"></div>
+        <div class="category-banner-img scroll-animate slide-right" style="background-image: url('i1.png');"></div>
       </div>
     </section>
 
     <section id="seeds" class="category-section">
       <div class="category-banner">
-        <div class="category-banner-img" style="background-image: url('i2.png');"></div>
-        <div class="category-banner-content">
+        <div class="category-banner-img scroll-animate slide-left" style="background-image: url('i2.png');"></div>
+        <div class="category-banner-content scroll-animate fade-up">
           <h2>Fresh & High Quality Seed Varieties</h2>
           <p>Satisfies Healthy Meet</p>
           <a href="category.html?type=seeds" class="banner-arrow-btn" style="text-decoration:none;">→</a>
@@ -122,21 +121,67 @@
 
     <section id="combos" class="category-section">
       <div class="category-banner">
-        <div class="category-banner-content">
+        <div class="category-banner-content scroll-animate fade-up">
           <h2>Signature Combos</h2>
           <p>The best of both worlds</p>
           <a href="category.html?type=combos" class="banner-arrow-btn" style="text-decoration:none;">→</a>
         </div>
-        <div class="category-banner-img" style="background-image: url('i3.png');"></div>
+        <div class="category-banner-img scroll-animate slide-right" style="background-image: url('i3.png');"></div>
       </div>
     </section>
 
     <!-- Instagram Section -->
     <section class="insta-section">
-      <h2>Follow us on Instagram</h2>
+      <svg aria-hidden="true" style="width:0;height:0;position:absolute;">
+        <linearGradient id="insta-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#f09433" />
+          <stop offset="25%" stop-color="#e6683c" />
+          <stop offset="50%" stop-color="#dc2743" />
+          <stop offset="75%" stop-color="#cc2366" />
+          <stop offset="100%" stop-color="#bc1888" />
+        </linearGradient>
+      </svg>
+      <h2>
+        <svg class="insta-icon" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.834a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg>
+        Follow us on Instagram
+      </h2>
       <img src="ins.png" alt="Instagram Profile" class="insta-image">
       <br>
-      <a href="https://www.instagram.com/svdryfruitsandnuts_?igsh=ZTJxZHJrZHlqeW03" target="_blank" class="shop-btn primary" style="font-size: 1.1rem; padding: 15px 30px;">Follow Us</a>
+      <a href="https://www.instagram.com/svdryfruitsandnuts_?igsh=ZTJxZHJrZHlqeW03" target="_blank" class="shop-btn primary" style="font-size: 1.1rem; padding: 15px 30px; background: #fff; color: #0056b3;">Follow Us</a>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="about-section">
+      <div class="about-container">
+        <h2>About SV Dry Fruits & Nuts</h2>
+        <p>Founded with a passion for health and quality, SV Dry Fruits & Nuts has been providing premium, naturally sourced nuts and seeds to our community. We believe in delivering products that not only taste exceptional but also contribute to your well-being.</p>
+        <p>Our commitment to excellence means we carefully select every product from the finest farms globally, ensuring freshness and peak nutritional value in every bite.</p>
+      </div>
+    </section>
+
+    <!-- Contact & Footer Section -->
+    <section class="contact-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>Contact Us</h3>
+          <p><svg class="icon-svg" style="width:18px;height:18px;" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> +91 87903 28321</p>
+          <p><svg class="icon-svg" style="width:18px;height:18px;" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> svdryfruits@example.com</p>
+          <p><svg class="icon-svg" style="width:18px;height:18px;" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg> Premium Nut Street, Chennai, TN</p>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <a href="#nuts">Nuts Collection</a>
+          <a href="#seeds">Seeds Collection</a>
+          <a href="#combos">Signature Combos</a>
+        </div>
+        <div class="footer-col">
+          <h3>Follow Us</h3>
+          <a href="https://www.instagram.com/svdryfruitsandnuts_?igsh=ZTJxZHJrZHlqeW03" target="_blank"><svg class="icon-svg" style="width:18px;height:18px;" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm3.98-10.834a1.44 1.44 0 11-2.88 0 1.44 1.44 0 012.88 0z"/></svg> Instagram</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 SV Dry Fruits & Nuts. All Rights Reserved.
+      </div>
     </section>
   </main>
 
@@ -166,6 +211,26 @@
       currentSlide = (currentSlide + 1) % slidesCount;
       updateSlider();
     }, 4000);
+
+    // Scroll Animation Observer
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.15
+    };
+
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.scroll-animate').forEach((el) => {
+      scrollObserver.observe(el);
+    });
   </script>
 </body>
 </html>
