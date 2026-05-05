@@ -16,7 +16,7 @@
     </a>
     <a href="index.html" class="logo-container">
       <img src="logo.png" alt="Logo">
-      <h2 style="font-weight: 700; letter-spacing: 1px;">NutriBite</h2>
+      <h2 style="font-weight: 700; letter-spacing: 1px;">SV Dry Fruits & Nuts</h2>
     </a>
     <div class="header-icons">
       <a href="checkout.html" class="icon-btn" title="Cart">
@@ -27,28 +27,35 @@
   </header>
 
   <main>
-    <!-- Scrollable Hero Sections (Horizontal) -->
-    <div class="hero-container">
-      <section class="hero-section hero-nuts" style="background-image: url('c1.png');">
-        <div class="hero-content">
-          <h1>Premium Quality Nuts</h1>
-          <a href="#nuts" class="shop-btn primary">Shop Nuts</a>
-        </div>
-      </section>
+    <!-- Animated Hero Carousel -->
+    <div class="hero-wrapper">
+      <div class="hero-container" id="hero-slider">
+        <section class="hero-section hero-nuts" style="background-image: url('c1.png');">
+          <div class="hero-content">
+            <h1>Premium Quality Nuts</h1>
+            <a href="#nuts" class="shop-btn primary">Shop Nuts</a>
+          </div>
+        </section>
 
-      <section class="hero-section hero-seeds" style="background-image: url('pum.png');">
-        <div class="hero-content">
-          <h1>Nutritious Seeds</h1>
-          <a href="#seeds" class="shop-btn primary">Shop Seeds</a>
-        </div>
-      </section>
+        <section class="hero-section hero-seeds" style="background-image: url('pum.png');">
+          <div class="hero-content">
+            <h1>Nutritious Seeds</h1>
+            <a href="#seeds" class="shop-btn primary">Shop Seeds</a>
+          </div>
+        </section>
 
-      <section class="hero-section hero-combos" style="background-image: url('nut.png');">
-        <div class="hero-content">
-          <h1>Signature Combos</h1>
-          <a href="#combos" class="shop-btn primary">Shop Combos</a>
-        </div>
-      </section>
+        <section class="hero-section hero-combos" style="background-image: url('nut.png');">
+          <div class="hero-content">
+            <h1>Signature Combos</h1>
+            <a href="#combos" class="shop-btn primary">Shop Combos</a>
+          </div>
+        </section>
+      </div>
+      <div class="carousel-dots">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+      </div>
     </div>
 
     <!-- Sliding Circular Menu -->
@@ -92,50 +99,73 @@
 
     <!-- Categories -->
     <section id="nuts" class="category-section">
-      <h2>Nuts Collection</h2>
-      <div class="product-grid" id="nuts-grid"></div>
+      <div class="category-banner">
+        <div class="category-banner-content">
+          <h2>Our Premium Quality Nuts</h2>
+          <p>Feel the nature</p>
+          <a href="category.html?type=nuts" class="banner-arrow-btn" style="text-decoration:none;">→</a>
+        </div>
+        <div class="category-banner-img" style="background-image: url('i1.png');"></div>
+      </div>
     </section>
 
     <section id="seeds" class="category-section">
-      <h2>Seeds Collection</h2>
-      <div class="product-grid" id="seeds-grid"></div>
+      <div class="category-banner">
+        <div class="category-banner-img" style="background-image: url('i2.png');"></div>
+        <div class="category-banner-content">
+          <h2>Fresh & High Quality Seed Varieties</h2>
+          <p>Satisfies Healthy Meet</p>
+          <a href="category.html?type=seeds" class="banner-arrow-btn" style="text-decoration:none;">→</a>
+        </div>
+      </div>
     </section>
 
     <section id="combos" class="category-section">
-      <h2>Combos Selection</h2>
-      <div class="product-grid" id="combos-grid"></div>
+      <div class="category-banner">
+        <div class="category-banner-content">
+          <h2>Signature Combos</h2>
+          <p>The best of both worlds</p>
+          <a href="category.html?type=combos" class="banner-arrow-btn" style="text-decoration:none;">→</a>
+        </div>
+        <div class="category-banner-img" style="background-image: url('i3.png');"></div>
+      </div>
+    </section>
+
+    <!-- Instagram Section -->
+    <section class="insta-section">
+      <h2>Follow us on Instagram</h2>
+      <img src="ins.png" alt="Instagram Profile" class="insta-image">
+      <br>
+      <a href="https://www.instagram.com/svdryfruitsandnuts_?igsh=ZTJxZHJrZHlqeW03" target="_blank" class="shop-btn primary" style="font-size: 1.1rem; padding: 15px 30px;">Follow Us</a>
     </section>
   </main>
 
   <script src="app.js"></script>
   <script>
     // Render Products Grid
-    function renderProducts() {
-      const allPrices = getPrices();
-      
-      const generateHTML = (items) => {
-        return items.map(item => {
-          // Display the 250g price on the main grid as default
-          const defaultPrice = allPrices[item.id] ? allPrices[item.id]['250g'] : 0;
-          return `
-            <a href="product.html?id=${item.id}" class="product-card">
-              <img src="${item.image}" alt="${item.name}" class="no-download">
-              <div class="product-card-body">
-                <h3>${item.name}</h3>
-                <div class="price">Rs. ${defaultPrice}.00</div>
-                <div class="shop-btn" style="display:block; padding: 10px; font-size: 0.9rem;">Add to cart</div>
-              </div>
-            </a>
-          `;
-        }).join('');
-      };
+    // Carousel Logic
+    let currentSlide = 0;
+    const slidesCount = 3;
+    const slider = document.getElementById('hero-slider');
+    const dots = document.querySelectorAll('.carousel-dots .dot');
 
-      document.getElementById('nuts-grid').innerHTML = generateHTML(products.nuts);
-      document.getElementById('seeds-grid').innerHTML = generateHTML(products.seeds);
-      document.getElementById('combos-grid').innerHTML = generateHTML(products.combos);
+    function updateSlider() {
+      if(!slider) return;
+      slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentSlide);
+      });
     }
-    
-    document.addEventListener('DOMContentLoaded', renderProducts);
+
+    window.goToSlide = function(index) {
+      currentSlide = index;
+      updateSlider();
+    }
+
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slidesCount;
+      updateSlider();
+    }, 4000);
   </script>
 </body>
 </html>

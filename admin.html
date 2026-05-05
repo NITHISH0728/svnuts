@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal | NutriBite</title>
+  <title>Admin Portal | SV Dry Fruits & Nuts</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
@@ -287,7 +287,10 @@
 
         html += `
           <div class="product-price-editor">
-            <h3>${product.name}</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:5px;">
+              <h3 style="margin:0; border:none; padding:0;">${product.name}</h3>
+              <button onclick="deleteProduct('${product.category}', '${product.id}')" style="background:red; color:white; border:none; padding:5px 10px; cursor:pointer; font-size:0.85rem; border-radius:3px;">Delete Product</button>
+            </div>
             <div class="price-grid">
               ${weights.map(w => `
                 <div class="price-input-group">
@@ -383,6 +386,25 @@
         if (existingProduct && existingProduct.realPhotos) {
           existingProduct.realPhotos.splice(index, 1);
           localStorage.setItem('products', JSON.stringify(products));
+          renderPriceEditors();
+        }
+      }
+    }
+
+    function deleteProduct(category, id) {
+      if (confirm("Are you sure you want to permanently delete this product?")) {
+        let categoryArray = products[category];
+        const index = categoryArray.findIndex(p => p.id === id);
+        if (index > -1) {
+          categoryArray.splice(index, 1);
+          localStorage.setItem('products', JSON.stringify(products));
+          
+          const prices = getPrices();
+          if (prices[id]) {
+            delete prices[id];
+            localStorage.setItem('prices', JSON.stringify(prices));
+          }
+          
           renderPriceEditors();
         }
       }
